@@ -1,13 +1,16 @@
 module KojunBoard where
+    import Data.Tuple
+    import Data.List
     import Data.Array.Unboxed
 
-    type Value = Int                        -- Valor guardado na celula
-    type Position = (Int, Int)              -- Posicao x y da celula
-    type Group = (Int, [Position])          -- Indexes dos membros de um grupo 
-    type Groups = [Group]                   -- Grupos de posicoes
-    type Board = UArray Position Value      -- Tabuleiro
+    type CellValue = Int                        -- Valor guardado na célula.
+    type GroupId = Int                          -- ID do grupo em que a célula está.
+    type Position = (Int, Int)                  -- Posição (x, y) da célula.
+    type Cell = (Position, CellValue, GroupId)  -- Representação de uma célula do tabuleiro.
+    type GameBoard = UArray Cell                -- Tabuleiro do jogo.
+    type Group = [Cell]                         -- Grupo de células do tabuleiro.
     
-    gameBoard :: Board
+    gameBoard :: GameBoard
     gameBoard = array ((0,0), (9,9)) $ puzzleAssocs examplePuzzle
 
     examplePuzzle :: [[Value]]
@@ -29,20 +32,20 @@ module KojunBoard where
                     ....]
 
     -- Retorna lista de posicoes vazias
-    emptyPositions :: Board -> [Position]
+    emptyPositions :: GameBoard -> [Position]
     emptyPositions b = [(row, col) | row <- [0..9], col <- [0..9], b ! (row, col) == 0]
 
     -- Retorna valores dentro de um grupo dada uma posicao
     -- usar para ver quais valores sao validos
-    valuesInGroup :: Board -> Position -> Groups -> [Value]
+    valuesInGroup :: GameBoard -> Position -> Groups -> [Value]
     valuesInGroup b (row, col) gr = [b ! loc | loc <- locations] where 
         --
 
     -- Retorna valores adjacentes a posicao
-    valuesInAdjancy :: Board -> Position -> [Value]
+    valuesInAdjancy :: GameBoard -> Position -> [Value]
 
     -- Determina se valor eh valido
-    isPossibleValue :: Value -> Position -> Board -> Bool
+    isPossibleValue :: Value -> Position -> GameBoard -> Bool
 
     -- Converte um grupo em um vetor associativo
     puzzleAssocs :: [[Value]] -> [(Position, Value)]
