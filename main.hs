@@ -28,7 +28,7 @@ printGameBoard gameBoard column = do
     printGameBoard (tail gameBoard) (snd (getPosition (head (tail gameBoard))))
 
 main = do
-    let gameBoard = [((0, 0), 1, 1), ((0, 1), 2, 1), ((0, 2), 3, 3)
+    let gameBoard = [((0, 0), 1, 1), ((0, 1), 2, 1), ((0, 2), 3, 3),
                      ((1, 0), 4, 2), ((1, 1), 5, 1), ((1, 2), 6, 2),
                      ((2, 0), 7, 2), ((2, 1), 8, 2), ((2, 2), 9, 2)]
     printGameBoard gameBoard 0
