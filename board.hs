@@ -91,3 +91,19 @@ insereEmLista :: Int -> Int -> [Int] -> [Int]
 insereEmLista novo id (h:t)
     | id <= 0 = novo:h:t
     | otherwise = h : insereEmLista novo (id-1) t
+
+-- Filtra os valores possíveis para serem menores que o valor da célula de cima, 
+-- se ela pertencer ao mesmo grupo.
+-- Parâmetros:
+---- [(Int, Int)]: lista de pares (valor, grupoID).
+---- [Int]: lista de valores do tabuleiro.
+---- Int: índice da célular sendo comparada.
+---- [Int]: lista de valores candidatos para a célula.
+-- Retorno:
+---- [Int]: lista atualizada com valores candidatos para a célula.
+menoresQueCelulaDeCima :: [(Int, Int)] -> [Int] -> Int -> [Int] -> [Int]
+menoresQueCelulaDeCima pares board id valores = do
+    let idCima = pegaIDCima id board
+    if idCima == -1 || snd (pares !! id) /= snd (pares !! idCima)
+        then valores
+    else filter (< (board !! idCima)) valores
