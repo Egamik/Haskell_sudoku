@@ -53,7 +53,7 @@ module GameBoard where
     getAdjacentCell :: Board -> (Position -> Maybe Position) -> Cell -> Maybe Cell
     getAdjacentCell board positionFunction cell = getCell board (positionFunction (getPosition cell))
 
-    -- Função que indica se duas células estão em um mesmo grupo.
+    -- Indica se duas células estão em um mesmo grupo.
     -- Parâmetros:
     ---- Cell: célula 1.
     ---- Cell: célula 2.
@@ -61,6 +61,53 @@ module GameBoard where
     ---- Bool: se as duas células estiverem no mesmo grupo, true, caso contrário false.
     isInSameGroup :: Cell -> Cell -> Bool
     isInSameGroup cell1 cell2 = getGroupId cell1 == getGroupId cell2
+
+    -- Indica se as células adjacentes tem valor diferente da célula central.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Cell: célula central.
+    -- Retorno:
+    ---- True, se todas as células adjacentes tem valores diferentes. False, caso contrário.
+    hasDifferentAdjacentCells :: Board -> Cell -> Bool
+    hasDifferentAdjacentCells board cell = do
+        let topDifference = isDifferentFrom board getTopPosition cell
+        let bottomDifference = isDifferentFrom board getBottomPosition cell
+        let leftDifference = isDifferentFrom board getLeftPosition cell
+        let rightDifference = isDifferentFrom board getRightPosition cell
+        and [topDifference, bottomDifference, leftDifference, rightDifference]
+
+    -- Indica se uma célula em determinada posição tem valor diferente da célula original.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Cell: célula original.
+    -- Retorno:
+    ---- True, se célula em determinada posição tem valor diferente. False, caso contrário.
+    isDifferentFrom :: Board -> (Position -> Maybe Position) -> Cell -> Bool
+    isDifferentFrom board positionFunction cell = do
+        case getAdjacentCell board positionFunction cell of
+            Just otherCell -> hasDifferentValues cell otherCell
+            Nothing -> True
+
+    -- Indica se duas células tem valores diferentes.
+    -- Parâmetros:
+    ---- Cell: célula 1.
+    ---- Cell: célula 2.
+    -- Retorno:
+    ---- True, se as células tem valores diferentes. False, caso contrário.
+    hasDifferentValues :: Cell -> Cell -> Bool 
+    hasDifferentValues a b = getCellValue a /= getCellValue b
+
+    isValidSolutionCell :: Board -> Cell -> Bool 
+    isValidSolutionCell board cell = do
+        let adjacencyValid = hasDifferentAdjacentCells board cell
+        let topCellValid = isTopCellValid board cell
+        adjacencyValid && topCellValid
+        
+    isTopCellValid :: Board -> Cell -> Bool 
+    isTopCellValid board cell = do
+        case getAdjacentCell board getTopPosition cell of
+            Just a -> (isInSameGroup a cell && getCellValue a > getCellValue cell) || not (isInSameGroup a cell)
+            Nothing -> True
 
     -- Função que imprime o tabuleiro na tela.
     -- Parâmetros:
