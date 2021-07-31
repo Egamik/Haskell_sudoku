@@ -16,33 +16,3 @@ main = do
                  ((9, 0), 91, 2), ((9, 1), 92, 2), ((9, 2), 93, 2), ((9, 3), 94, 3), ((9, 4), 95, 3), ((9, 5), 96, 3), ((9, 6), 97, 3), ((9, 7), 98, 3), ((9, 8), 99, 3), ((9, 9), 100, 3)]
     
     printGameBoard board 0 10
-
-    print "============================================================"
-
-    let cell = ((9, 0), 91, 2)
-    printCell cell
-    print (isValidSolutionCell board cell)
-
-    let position = Just (1, 0)
-    let position2 = Just (5, 3)
-    let cell1 = getCell board position
-    let cell2 = getCell board position2
-    case cell1 of
-        Just a -> do
-            print a
-            case getAdjacentCell board getTopPosition a of
-                Just x -> print ("Top cell: " ++ show (getCellValue x))
-                Nothing -> print "No cells on top."
-            case getAdjacentCell board getBottomPosition a of
-                Just x -> print ("Bottom cell: " ++ show (getCellValue x))
-                Nothing -> print "No cells at bottom."
-            case getAdjacentCell board getLeftPosition a of
-                Just x -> print ("Left cell: " ++ show (getCellValue x))
-                Nothing -> print "No cells at left."
-            case getAdjacentCell board getRightPosition a of
-                Just x -> print ("Right cell: " ++ show (getCellValue x))
-                Nothing -> print "No cells at right."
-            case cell2 of
-                Just b -> print (isInSameGroup a b)
-                Nothing -> print "Nothing"
-        Nothing -> print "Nothing"
