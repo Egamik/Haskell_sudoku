@@ -31,25 +31,17 @@ module GameBoard where
     getRightPosition (i, 9) = Nothing
     getRightPosition (i, j) = Just (i, j + 1)
 
+    -- Busca uma célula no tabuleiro, se houver.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Maybe Position: posição desejada para encontrar a célula.
     getCell :: Board -> Maybe Position -> Maybe Cell
     getCell board position = do
-        if (length board) == 0
+        if null board
             then Nothing
         else if Just (getPosition (head board)) == position
             then Just (head board)
         else getCell (tail board) position
-
-    getTopCell :: Board -> Cell -> Maybe Cell
-    getTopCell board cell = getCell board (getTopPosition (getPosition cell))
-
-    getBottomCell :: Board -> Cell -> Maybe Cell
-    getBottomCell board cell = getCell board (getBottomPosition (getPosition cell))
-
-    getLeftCell :: Board -> Cell -> Maybe Cell
-    getLeftCell board cell = getCell board (getLeftPosition (getPosition cell))
-
-    getRightCell :: Board -> Cell -> Maybe Cell
-    getRightCell board cell = getCell board (getRightPosition (getPosition cell))
 
     -- Função que retorna uma célula adjacente.
     -- Parâmetros:
@@ -68,4 +60,46 @@ module GameBoard where
     -- Retorno:
     ---- Bool: se as duas células estiverem no mesmo grupo, true, caso contrário false.
     isInSameGroup :: Cell -> Cell -> Bool
-    isInSameGroup cell1 cell2 = (getGroupId cell1) == (getGroupId cell2)
+    isInSameGroup cell1 cell2 = getGroupId cell1 == getGroupId cell2
+
+    -- Função que imprime o tabuleiro na tela.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Int: coluna inicial a partir de onde o tabuleiro deve ser inserido (o valor comum é zero).
+    ---- Int: ordem da matriz que representa o tabuleiro.
+    printGameBoard :: Board -> Int -> Int -> IO()
+    printGameBoard board column boardSize = do
+        if null board
+            then putStr ""
+        else do
+            let currentCell = head board
+            putStr (show (getCellValue currentCell) ++ "(" ++ show (getGroupId currentCell) ++ ") ")
+            if mod column boardSize == boardSize - 1
+                then putStr "\n"
+            else putStr ""
+            printGameBoard (tail board) (snd (getPosition (head (tail board)))) boardSize
+    
+    -- Retorna uma string apresentando a posição de uma célula.
+    -- Parâmetros:
+    ---- Cell: célula a ter sua posição apresentada.
+    showPosition :: Cell -> String
+    showPosition cell = "Position: " ++ show (getPosition cell)
+
+    -- Retorna uma string apresentando o valor de uma célula.
+    -- Parâmetros:
+    ---- Cell: célula a ter seu valor apresentado.
+    showCellValue :: Cell -> String 
+    showCellValue cell = "Value: " ++ show (getCellValue cell)
+
+    -- Retorna uma string apresentando o grupo de uma célula.
+    -- Parâmetros:
+    ---- Cell: célula a ter seu grupo apresentado.
+    showGroup :: Cell -> String 
+    showGroup cell = "Group: " ++ show (getGroupId cell)
+
+    -- Imprime as informações de uma célula.
+    -- Parâmetros:
+    ---- Cell: célula a ter suas informações apresentadas.
+    printCell :: Cell -> IO()
+    printCell cell = do
+        print (showPosition cell ++ " - " ++ showCellValue cell ++ " - " ++ showGroup cell)

@@ -3,23 +3,6 @@ import Data.Tuple
 import Data.List
 import GameBoard
 
--- Função que imprime o tabuleiro na tela.
--- Parâmetros:
----- Board: tabuleiro.
----- Int: coluna inicial a partir de onde o tabuleiro deve ser inserido (o valor comum é zero).
----- Int: ordem da matriz que representa o tabuleiro.
-printGameBoard :: Board -> Int -> Int -> IO()
-printGameBoard board column boardSize = do
-    if (length board) == 0
-        then putStr ""
-    else do
-        let currentCell = (head board)
-        putStr ((show (getCellValue currentCell)) ++ "(" ++ (show (getGroupId currentCell)) ++ ") ")
-        if (mod column boardSize) == boardSize - 1
-            then putStr "\n"
-        else putStr ""
-        printGameBoard (tail board) (snd (getPosition (head (tail board)))) boardSize
-
 main = do
     let board = [((0, 0), 1, 1), ((0, 1), 2, 1), ((0, 2), 3, 3), ((0, 3), 4, 3), ((0, 4), 5, 3), ((0, 5), 6, 3), ((0, 6), 7, 3), ((0, 7), 8, 3), ((0, 8), 9, 3), ((0, 9), 10, 3),
                  ((1, 0), 11, 2), ((1, 1), 12, 1), ((1, 2), 13, 2), ((1, 3), 14, 3), ((1, 4), 15, 3), ((1, 5), 16, 3), ((1, 6), 17, 3), ((1, 7), 18, 3), ((1, 8), 19, 3), ((1, 9), 20, 3),
@@ -34,26 +17,28 @@ main = do
     
     printGameBoard board 0 10
 
-    print "--------------------------------------------------"
+    print "============================================================"
+
+    printCell ((9, 0), 91, 2)
 
     let position = Just (1, 0)
     let position2 = Just (5, 3)
-    let cell = (getCell board position)
-    let cell2 = (getCell board position2)
+    let cell = getCell board position
+    let cell2 = getCell board position2
     case cell of
         Just a -> do
             print a
             case getAdjacentCell board getTopPosition a of
-                Just x -> print ("Top cell: " ++ (show (getCellValue x)))
+                Just x -> print ("Top cell: " ++ show (getCellValue x))
                 Nothing -> print "No cells on top."
             case getAdjacentCell board getBottomPosition a of
-                Just x -> print ("Bottom cell: " ++ (show (getCellValue x)))
+                Just x -> print ("Bottom cell: " ++ show (getCellValue x))
                 Nothing -> print "No cells at bottom."
             case getAdjacentCell board getLeftPosition a of
-                Just x -> print ("Left cell: " ++ (show (getCellValue x)))
+                Just x -> print ("Left cell: " ++ show (getCellValue x))
                 Nothing -> print "No cells at left."
             case getAdjacentCell board getRightPosition a of
-                Just x -> print ("Right cell: " ++ (show (getCellValue x)))
+                Just x -> print ("Right cell: " ++ show (getCellValue x))
                 Nothing -> print "No cells at right."
             case cell2 of
                 Just b -> print (isInSameGroup a b)
