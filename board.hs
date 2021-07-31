@@ -1,9 +1,10 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 module KojunBoard where
 
 import Data.List
 import Data.Maybe
-
+import Data.Monoid ((<>))
 
 examplePuzzle :: [[Int]]
 examplePuzzle = [[5, 0, 2, 0, 2, 0, 3, 1, 3, 1],
@@ -57,30 +58,36 @@ grupoPossui :: Int -> [Int] -> Bool
 grupoPossui _ [] = False
 grupoPossui a xs = length (filter (== a) xs) == 1
 
--- Recebe lista dos grupos, o label do grupo e retorna lista dos indices dos elementos
---posicoesGrupo :: [Int] -> Int -> [Int]
---posicoesGrupo [] _ = [0]
---posicoesGrupo xs lbl = helper 0 where
---    helper _ [] = []
---    helper i (lbl:xs) = i : helper (i+1) xs    
---    helper i (_:xs) = helper (i+1) xs
+-- Recebe matriz em lista dos grupos, o label do grupo e retorna lista dos indices dos elementos
+posicoesGrupo :: [Int] -> Int -> [Int]
+posicoesGrupo grupos valor = elemIndices valor grupos
 
--- Recebe indice da posicao, a liista e retorna elementos que sao adjacentes
---pegaAdjacentes :: Int -> [Int] -> [Int]
---pegaAdjacentes a mat = [x | x <- mat, x !! (a)]
+-- Recebe tabuleiro, posicoes de um grupo e retorna valores associados do tabuleiro
+valoresGrupo :: [Int] -> [Int] -> [Int]
+valoresGrupo board groups = [board !! i | i <- groups]
 
+-- Pega a posicao do elemento acima da posicao fornecida
 pegaIDCima :: Int -> [Int] -> Int
 pegaIDCima id xs = if id `elem` [0..9] then (-1) else id-10
 
+-- Pega a posicao do elemento abaixo da posicao fornecida
 pegaIDBaixo :: Int -> [Int] -> Int
 pegaIDBaixo id xs = if id `elem` [90..99] then (-1) else id+10
 
+-- Pega a posicao do elemento a esquerda da posicao fornecida
 pegaIDEsq :: Int -> [Int] -> Int
 pegaIDEsq id xs = if id `mod` 10 == 0 then (-1) else id-1
 
+-- Pega a posicao do elemento a direita da posicao fornecida
 pegaIDDir :: Int -> [Int] -> Int
 pegaIDDir id xs = if id `mod` 9 == 0 then (-1) else id+1
 
 pegaVizinhos :: Int -> [Int] -> [Int]
 pegaVizinhos _ [] = []
 pegaVizinhos id mat = [mat !! pegaIDCima id mat, mat !! pegaIDBaixo id mat, mat !! pegaIDEsq id mat, mat !! pegaIDDir id mat]
+
+-- Insere elemento novo no index id na lista fornecida
+insereEmLista :: Int -> Int -> [Int] -> [Int]
+insereEmLista novo id (h:t)
+    | id <= 0 = novo:h:t
+    | otherwise = h : insereEmLista novo (id-1) t
