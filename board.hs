@@ -108,8 +108,8 @@ insereEmLista novo id (h:t)
 ---- [Int]: lista de valores candidatos para a célula.
 -- Retorno:
 ---- [Int]: lista atualizada com valores candidatos para a célula.
-menoresQueCelulaDeCima :: [(Int, Int)] -> [Int] -> Int -> [Int] -> [Int]
-menoresQueCelulaDeCima pares matriz id valores = do
+filtraCandidatosPelaCelulaDeCima :: [(Int, Int)] -> [Int] -> Int -> [Int] -> [Int]
+filtraCandidatosPelaCelulaDeCima pares matriz id valores = do
     let idCima = pegaIDCima id matriz
     if idCima == -1 || snd (pares !! id) /= snd (pares !! idCima)
         then valores
@@ -122,8 +122,8 @@ menoresQueCelulaDeCima pares matriz id valores = do
 ---- [Int]: lista de valores candidatos para a célula.
 -- Retorno:
 ---- [Int]: lista atualizada com valores candidatos para a célula.
-removeValoresAdjacentes :: [Int] -> Int -> [Int] -> [Int]
-removeValoresAdjacentes matriz id valoresCandidatos = do
+filtraCandidatosPelosValoresAdjacentes :: [Int] -> Int -> [Int] -> [Int]
+filtraCandidatosPelosValoresAdjacentes matriz id valoresCandidatos = do
     let valoresVizinhos = pegaVizinhos id matriz
     if null valoresVizinhos
         then valoresCandidatos
