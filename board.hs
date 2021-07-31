@@ -99,18 +99,32 @@ insereEmLista novo id (h:t)
     | id <= 0 = novo:h:t
     | otherwise = h : insereEmLista novo (id-1) t
 
--- Filtra os valores possíveis para serem menores que o valor da célula de cima, 
+-- Filtra os valores candidatos para serem menores que o valor da célula de cima, 
 -- se ela pertencer ao mesmo grupo.
 -- Parâmetros:
 ---- [(Int, Int)]: lista de pares (valor, grupoID).
 ---- [Int]: lista de valores do tabuleiro.
----- Int: índice da célular sendo comparada.
+---- Int: índice da célula sendo comparada.
 ---- [Int]: lista de valores candidatos para a célula.
 -- Retorno:
 ---- [Int]: lista atualizada com valores candidatos para a célula.
 menoresQueCelulaDeCima :: [(Int, Int)] -> [Int] -> Int -> [Int] -> [Int]
-menoresQueCelulaDeCima pares board id valores = do
-    let idCima = pegaIDCima id board
+menoresQueCelulaDeCima pares matriz id valores = do
+    let idCima = pegaIDCima id matriz
     if idCima == -1 || snd (pares !! id) /= snd (pares !! idCima)
         then valores
-    else filter (< (board !! idCima)) valores
+    else filter (< (matriz !! idCima)) valores
+
+-- Filtra os valores candidatos removendo os valores adjacentes à célula.
+-- Parâmetros:
+---- [Int]: lista de valores do tabuleiro.
+---- Int: índice da célula sendo comparada.
+---- [Int]: lista de valores candidatos para a célula.
+-- Retorno:
+---- [Int]: lista atualizada com valores candidatos para a célula.
+removeValoresAdjacentes :: [Int] -> Int -> [Int] -> [Int]
+removeValoresAdjacentes matriz id valoresCandidatos = do
+    let valoresVizinhos = pegaVizinhos id matriz
+    if null valoresVizinhos
+        then valoresCandidatos
+    else filter (`elem` valoresCandidatos) valoresCandidatos
