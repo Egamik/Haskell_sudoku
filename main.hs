@@ -41,16 +41,16 @@ main = do
     case cell of
         Just a -> do
             print a
-            case getUpperCell board a of
-                Just x -> print (getCellValue x)
-                Nothing -> print "Não há célular acima"
-            case getLowerCell board a of
-                Just x -> print (getCellValue x)
-                Nothing -> print "Não há célular abaixo"
-            case getLeftCell board a of
-                Just x -> print (getCellValue x)
-                Nothing -> print "Não há célular na esquerda"
-            case getRightCell board a of
-                Just x -> print (getCellValue x)
-                Nothing -> print "Não há célular na direita"
+            case getAdjacentCell board getTopPosition a of
+                Just x -> print ("Top cell: " ++ (show (getCellValue x)))
+                Nothing -> print "No cells on top."
+            case getAdjacentCell board getBottomPosition a of
+                Just x -> print ("Bottom cell: " ++ (show (getCellValue x)))
+                Nothing -> print "No cells at bottom."
+            case getAdjacentCell board getLeftPosition a of
+                Just x -> print ("Left cell: " ++ (show (getCellValue x)))
+                Nothing -> print "No cells at left."
+            case getAdjacentCell board getRightPosition a of
+                Just x -> print ("Right cell: " ++ (show (getCellValue x)))
+                Nothing -> print "No cells at right."
         Nothing -> print "Nothing"

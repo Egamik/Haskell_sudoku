@@ -15,13 +15,13 @@ module GameBoard where
     getGroupId :: Cell -> GroupId
     getGroupId (_, _, groupId) = groupId
 
-    getUpperPosition :: Position -> Maybe Position
-    getUpperPosition (0, j) = Nothing
-    getUpperPosition (i, j) = Just (i - 1, j)
+    getTopPosition :: Position -> Maybe Position
+    getTopPosition (0, j) = Nothing
+    getTopPosition (i, j) = Just (i - 1, j)
 
-    getLowerPosition :: Position -> Maybe Position
-    getLowerPosition (9, j) = Nothing
-    getLowerPosition (i, j) = Just (i + 1, j)
+    getBottomPosition :: Position -> Maybe Position
+    getBottomPosition (9, j) = Nothing
+    getBottomPosition (i, j) = Just (i + 1, j)
 
     getLeftPosition :: Position -> Maybe Position
     getLeftPosition (i, 0) = Nothing
@@ -39,14 +39,24 @@ module GameBoard where
             then Just (head board)
         else getCell (tail board) position
 
-    getUpperCell :: Board -> Cell -> Maybe Cell
-    getUpperCell board cell = getCell board (getUpperPosition (getPosition cell))
+    getTopCell :: Board -> Cell -> Maybe Cell
+    getTopCell board cell = getCell board (getTopPosition (getPosition cell))
 
-    getLowerCell :: Board -> Cell -> Maybe Cell
-    getLowerCell board cell = getCell board (getLowerPosition (getPosition cell))
+    getBottomCell :: Board -> Cell -> Maybe Cell
+    getBottomCell board cell = getCell board (getBottomPosition (getPosition cell))
 
     getLeftCell :: Board -> Cell -> Maybe Cell
     getLeftCell board cell = getCell board (getLeftPosition (getPosition cell))
 
     getRightCell :: Board -> Cell -> Maybe Cell
     getRightCell board cell = getCell board (getRightPosition (getPosition cell))
+
+    -- Função que retorna uma célula adjacente.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- (Position -> Maybe Position): função de posição em relação à célula.
+    ---- Cell: célula.
+    -- Retorno:
+    ---- Maybe Cell: célula adjacente à célula original.
+    getAdjacentCell :: Board -> (Position -> Maybe Position) -> Cell -> Maybe Cell
+    getAdjacentCell board positionFunction cell = getCell board (positionFunction (getPosition cell))
