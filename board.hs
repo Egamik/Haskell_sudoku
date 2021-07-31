@@ -74,6 +74,13 @@ pegaIDCima id xs = if id `elem` [0..9] then (-1) else id-10
 pegaIDBaixo :: Int -> [Int] -> Int
 pegaIDBaixo id xs = if id `elem` [90..99] then (-1) else id+10
 
+-- Recebe tabuleiro, vetor grupos, label do grupo e retorna valores disponiveis naquele grupo
+valoresDisponiveisGrupo :: [Int] -> [Int] -> Int -> [Int]
+valoresDisponiveisGrupo board groups label = [0 .. 7] \\ valores
+    where
+        posicoes = posicoesGrupo groups label
+        valores = valoresGrupo board posicoes
+
 -- Pega a posicao do elemento a esquerda da posicao fornecida
 pegaIDEsq :: Int -> [Int] -> Int
 pegaIDEsq id xs = if id `mod` 10 == 0 then (-1) else id-1
