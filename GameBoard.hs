@@ -60,3 +60,12 @@ module GameBoard where
     ---- Maybe Cell: célula adjacente à célula original.
     getAdjacentCell :: Board -> (Position -> Maybe Position) -> Cell -> Maybe Cell
     getAdjacentCell board positionFunction cell = getCell board (positionFunction (getPosition cell))
+
+    -- Função que indica se duas células estão em um mesmo grupo.
+    -- Parâmetros:
+    ---- Cell: célula 1.
+    ---- Cell: célula 2.
+    -- Retorno:
+    ---- Bool: se as duas células estiverem no mesmo grupo, true, caso contrário false.
+    isInSameGroup :: Cell -> Cell -> Bool
+    isInSameGroup cell1 cell2 = (getGroupId cell1) == (getGroupId cell2)

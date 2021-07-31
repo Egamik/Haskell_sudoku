@@ -37,7 +37,9 @@ main = do
     print "--------------------------------------------------"
 
     let position = Just (1, 0)
+    let position2 = Just (5, 3)
     let cell = (getCell board position)
+    let cell2 = (getCell board position2)
     case cell of
         Just a -> do
             print a
@@ -53,4 +55,7 @@ main = do
             case getAdjacentCell board getRightPosition a of
                 Just x -> print ("Right cell: " ++ (show (getCellValue x)))
                 Nothing -> print "No cells at right."
+            case cell2 of
+                Just b -> print (isInSameGroup a b)
+                Nothing -> print "Nothing"
         Nothing -> print "Nothing"
