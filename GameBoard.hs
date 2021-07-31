@@ -1,10 +1,11 @@
 module GameBoard where
-    type CellValue = Int
-    type GroupId = Int
     type Position = (Int, Int)
+    type CellValue = Int
     type Cell = (Position, CellValue, GroupId)
+    type GroupId = Int
+    type GroupSize = Int
+    type Group = ([Cell], GroupSize)
     type Board = [Cell]
-    type Group = [Cell]
 
     getPosition :: Cell -> Position
     getPosition (position, _, _) = position
@@ -120,6 +121,14 @@ module GameBoard where
         case getAdjacentCell board getTopPosition cell of
             Just a -> (isInSameGroup a cell && getCellValue a > getCellValue cell) || not (isInSameGroup a cell)
             Nothing -> True
+    
+    -- getAvailableValuesInGroup :: [GroupId] -> [Int]
+    -- getAdjacentValues :: Cell -> [Int]
+    -- getTopCellValue :: Cell -> Int
+    -- getGroups :: Board -> [Group]
+
+    count   :: Eq a => a -> [a] -> Int
+    count x =  length . filter (==x)
 
     -- Função que imprime o tabuleiro na tela.
     -- Parâmetros:
