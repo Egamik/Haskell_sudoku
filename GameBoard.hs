@@ -97,12 +97,24 @@ module GameBoard where
     hasDifferentValues :: Cell -> Cell -> Bool 
     hasDifferentValues a b = getCellValue a /= getCellValue b
 
+    -- Indica se a célula é válida para a solução do jogo.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Cell: célula a ser analisada.
+    -- Retorno:
+    ---- True, se a célula é válida. False, caso contrário.
     isValidSolutionCell :: Board -> Cell -> Bool 
     isValidSolutionCell board cell = do
         let adjacencyValid = hasDifferentAdjacentCells board cell
         let topCellValid = isTopCellValid board cell
         adjacencyValid && topCellValid
         
+    -- Indica se a regra da célula mais acima está sendo atendida válida.
+    -- Parâmetros:
+    ---- Board: tabuleiro.
+    ---- Cell: célula a ser analisada.
+    -- Retorno:
+    ---- True, se a regra é atendida. False, caso contrário.
     isTopCellValid :: Board -> Cell -> Bool 
     isTopCellValid board cell = do
         case getAdjacentCell board getTopPosition cell of
