@@ -64,3 +64,23 @@ grupoPossui a xs = length (filter (== a) xs) == 1
 --    helper _ [] = []
 --    helper i (lbl:xs) = i : helper (i+1) xs    
 --    helper i (_:xs) = helper (i+1) xs
+
+-- Recebe indice da posicao, a liista e retorna elementos que sao adjacentes
+--pegaAdjacentes :: Int -> [Int] -> [Int]
+--pegaAdjacentes a mat = [x | x <- mat, x !! (a)]
+
+pegaIDCima :: Int -> [Int] -> Int
+pegaIDCima id xs = if id `elem` [0..9] then (-1) else id-10
+
+pegaIDBaixo :: Int -> [Int] -> Int
+pegaIDBaixo id xs = if id `elem` [90..99] then (-1) else id+10
+
+pegaIDEsq :: Int -> [Int] -> Int
+pegaIDEsq id xs = if id `mod` 10 == 0 then (-1) else id-1
+
+pegaIDDir :: Int -> [Int] -> Int
+pegaIDDir id xs = if id `mod` 9 == 0 then (-1) else id+1
+
+pegaVizinhos :: Int -> [Int] -> [Int]
+pegaVizinhos _ [] = []
+pegaVizinhos id mat = [mat !! pegaIDCima id mat, mat !! pegaIDBaixo id mat, mat !! pegaIDEsq id mat, mat !! pegaIDDir id mat]
