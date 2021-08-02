@@ -1,27 +1,17 @@
 
 import Data.List
 import Data.Maybe
+import Debug.Trace
 
 main = do
     let tab = linearizaMatriz examplePuzzle
     let group = linearizaMatriz exampleGroups
-    print tab
-    print group
-    --print (valoresPossiveis tab group 97)
-    --print (pegaVizinhos 11 tab 0 [])
-    --let teste = posicoesGrupo group 17
-    --print (valoresGrupo tab teste)
-    --print (insereEmLista 24 3 [6..9])
-    --let a = valoresDisponiveisGrupo tab group 6
-    --let b = 8:a
-    --print b
-    --print (filtraValoresPelaCelulaAcima tab group 33 b)
-    --print (solucoes tab group)
-    print "Passou"
     let sol = soluciona tab group
     case sol of
         Just m -> putStrLn (mostraMatriz m 0)
         Nothing -> print "Erro"
+
+debug = flip trace
 
 examplePuzzle :: [[Int]]
 examplePuzzle = [[5, 0, 2, 0, 2, 0, 3, 1, 3, 1],
@@ -62,14 +52,12 @@ solucoes b g = solucoes' (elemIndices 0 b) g b
         solucoes' [] _ tab = [tab]
         -- Se existem lugares vazios, aplica recursivamente solucoes',
         -- exaurindo todos os candidatos a preencher a celula vazia
-        solucoes' (x:xs) grp tab = concatMap (solucoes' xs grp) candidatosTab
-            where
-                -- Recupera lista de valores possiveis para aquela celula
-                candidatosVal = valoresPossiveis tab g x
-                -- Insere em uma lista
-                candidatosTab = map (\val -> insereEmLista val x tab) candidatosVal 
-
-
+        solucoes' (x:xs) grp tab = do
+            -- Recupera lista de valores possiveis para aquela celula
+            let candidatosVal = valoresPossiveis tab g x
+            -- Insere em uma lista
+            let candidatosTab = map (\val -> insereEmLista val x tab) candidatosVal 
+            concatMap (solucoes' xs grp) candidatosTab
 
 -- Recebe:
 -- [Int] tabuleiro
@@ -82,7 +70,7 @@ valoresPossiveis m g i = valores
         valoresGrupo = valoresDisponiveisGrupo m g (g!!i)
         valoresVizinho = filtraValoresAdjacentes m i valoresGrupo
         valores = filtraValoresPelaCelulaAcima m g i valoresVizinho
-        
+
 
 -- Transforma matriz em lista
 linearizaMatriz :: [[Int]] -> [Int]
@@ -160,18 +148,18 @@ pegaVizinhos :: Int -> [Int] -> Int -> [Int] -> [Int]
 pegaVizinhos _ [] _ _ = []
 pegaVizinhos id mat aux res = do
     let cima = pegaIDCima id
-    if aux == 0 then 
+    if aux == 0 then
         case pegaIDCima id of
             Just x -> pegaVizinhos id mat (aux+1) ((mat !! x) : res); Nothing -> pegaVizinhos id mat (aux+1) res
     else if aux == 1 then
         case pegaIDBaixo id of
-            Just y -> pegaVizinhos id mat (aux+1) ((mat !! y) : res); Nothing -> pegaVizinhos id mat (aux+1) res 
+            Just y -> pegaVizinhos id mat (aux+1) ((mat !! y) : res); Nothing -> pegaVizinhos id mat (aux+1) res
     else if aux == 2 then
         case pegaIDDir id of
             Just z -> pegaVizinhos id mat (aux+1) ((mat !! z) : res); Nothing -> pegaVizinhos id mat (aux+1) res
     else if aux == 3 then
         case pegaIDEsq id of
-            Just j -> pegaVizinhos id mat (aux+1) ((mat !! j) : res); Nothing -> pegaVizinhos id mat (aux+1) res 
+            Just j -> pegaVizinhos id mat (aux+1) ((mat !! j) : res); Nothing -> pegaVizinhos id mat (aux+1) res
     else res
 
 -- Recebe:
@@ -214,6 +202,10 @@ headOrNothing :: [a] -> Maybe a
 headOrNothing []     = Nothing
 headOrNothing (x:xs) = Just x
 
+-- Recebe vetor e formata de acordo com o tamanho
+-- [Int]:   Matriz
+--  Int:    Numero auxiliar para recursividade
+-- Retorna string formatada
 mostraMatriz :: [Int] -> Int -> String
 mostraMatriz [] _ = ""
 mostraMatriz (h:t) aux
