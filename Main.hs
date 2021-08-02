@@ -48,16 +48,11 @@ solucoes b g = solucoes' (elemIndices 0 b) g b
         -- determina quais valores sao possiveis colocar naquele lugar e ,recursivamente,
         -- encontra todas as solucoes para aquele conjunto de valores
         solucoes' :: [Int] -> [Int] -> [Int] -> [[Int]]
-        -- Caso nao hajam mais lugares vazios achamos uma solucao
-        solucoes' [] _ tab = [tab]
-        -- Se existem lugares vazios, aplica recursivamente solucoes',
-        -- exaurindo todos os candidatos a preencher a celula vazia
-        solucoes' (x:xs) grp tab = do
-            -- Recupera lista de valores possiveis para aquela celula
-            let candidatosVal = valoresPossiveis tab g x
-            -- Insere em uma lista
-            let candidatosTab = map (\val -> insereEmLista val x tab) candidatosVal 
-            concatMap (solucoes' xs grp) candidatosTab
+        solucoes' [] m _ = [m]
+        solucoes' (x:xs) m g = concatMap (solucoes' xs g) candidatosTab
+            where
+                candidatosVal = [l | l <- reverse [1..7], valorEhPossivel m g x l]
+                candidatosTab = map (\l -> insereEmLista l x m) candidatosVal
 
 -- Recebe:
 -- [Int] tabuleiro
